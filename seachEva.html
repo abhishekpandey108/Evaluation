@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+
+<head>
+    <meta charset='utf-8'>
+    <meta http-equiv='X-UA-Compatible' content='IE=edge'>
+    <title>Search</title>
+    <meta name='viewport' content='width=device-width, initial-scale=1'>
+     <style>
+        *{
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        #container{
+            display: flex;
+            background-color: green;
+            color:white;
+            justify-content: flex-end;
+            margin-bottom: 10px;
+        }
+        #container>a{
+           padding: 10px;
+           cursor: pointer;
+           text-decoration: none;
+           color: white;
+           
+        }
+        #container>a:hover{
+            text-decoration: underline;
+           transform: scale(1.05);
+        }
+        #holder{
+            display: flex;
+            flex-direction: row;
+            justify-content: flex-start;
+            gap: 20px;
+            flex-wrap: wrap;
+            margin-left: 20px;
+        }
+        #card{
+            border: 1px solid gray;
+            border-radius: 5px;
+            width: 280px;
+            padding: 10px;
+            background-color: wheat;
+            margin-bottom: 20px;
+        }
+
+
+
+        
+     </style>
+
+</head>
+<body>
+    <div id="container">
+        <a href="homeEva.html" target="_blank">Home</a>
+        <a href="seachEva.html">Search</a>
+        
+    </div>
+    <input type="text" id="name" placeholder="Enter name..." /><button id="enter">Seach</button>
+    <div id="holder">
+
+    </div>
+    
+</body>
+</html>
+
+
+<script>
+    
+   let holder=document.getElementById("holder");
+
+ 
+document.getElementById("enter").addEventListener("click",getData);
+let nameo=document.getElementById("name").value;
+
+function displayData(data){
+    holder.innerHTML="";
+ data.map(function(elem){
+    
+    var div=document.createElement("div");
+    div.setAttribute("id","card");
+    var id=document.createElement("p");
+    id.textContent=elem.id;
+    var name=document.createElement("p");
+    name.textContent=elem.name;
+    var type=document.createElement("p");
+    type.textContent=elem.brewery_type;
+    var city=document.createElement("p");
+    city.textContent=elem.city;
+    var state=document.createElement("p");
+    state.textContent=elem.state;
+    var country=document.createElement("p");
+    country.textContent=elem.country
+
+    div.append(id,name,type,city,state,country);
+    document.getElementById("holder").append(div);
+    
+ })
+}
+
+let url=`https://api.openbrewerydb.org/breweries?by_name=${nameo}&per_page=5`;
+console.log("rel: ",url);
+   async function getData(){
+    
+        let list = await fetch(url);
+        let Dataa = await list.json();
+        console.log(Dataa);
+        displayData(Dataa);
+   }
+
+  
+</script>
