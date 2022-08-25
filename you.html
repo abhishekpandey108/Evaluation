@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>YouTube</title>
+    <style>
+        *{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+*:focus{
+    outline: none;
+}
+body{
+    position: relative;
+    background: #f0f0f0;
+    font-family: 'roboto',sans-serif;
+}
+.navbar{
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 60px;
+    background: #fff;
+    display: flex;
+    align-items: center;
+    padding: 0 2.5vw;
+}
+.toggle-btn{
+    width: 20px;
+    height: 10px;
+    position: relative;
+    cursor: pointer;
+}
+.toggle-btn span{
+    position: absolute;
+    width: 100%;
+    height: 2px;
+    top: 50%;
+    transform: translate(-50%);
+    background: #979797;
+}
+.toggle-btn span:nth-child(1){
+    top:0;
+}
+.toggle-btn span:nth-child(3){
+    top:100%;
+}
+.logo{
+    height: 30px;
+    margin: -10px 30px 0;
+}
+
+.search-box{
+    position: relative;
+    max-width: 500px;
+    width: 50%;
+    height: 35px;
+    display: flex;
+}
+.search-bar{
+    width: 85%;
+    height: 100%;
+    border: 2px solid #dbdbdb;
+    padding: 0 20px;
+    font-size: 16px;
+}
+.search-btn{
+    width: 15%;
+    height: 100%;
+    background: #f0f0f0;
+    border: 2px solid #dbdbdb;
+    padding: 5px 0;
+    border-left: none;
+}
+.search-btn img{
+    height: 100%;
+    cursor: pointer;
+}
+.user-options{
+    height: 35px;
+    display: flex;
+    margin-left: auto;
+    align-items: center;
+}
+.user-options .icon{
+    height: 80%;
+    margin-right: 20px;
+    cursor: pointer;
+}
+.user-dp{
+    cursor: pointer;
+    height: 30px;
+    width: 30px;
+    border-radius: 50%;
+    overflow: hidden;
+    background-color: #979797;
+}
+.user-dp img{
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+
+
+.side-bar{
+    position: fixed;
+    top: 60px;
+    left: 0;
+    min-width: 250px;
+    width: 250px;
+    height: calc(100vh-60px);
+    background: #fff;
+    padding-right: 10px;
+}
+.links{
+    display: block;
+    width: 100%;
+    padding: 10px 20px;
+    display: flex;
+    align-items: center;
+    text-transform: capitalize;
+    color: #242424;
+    font-size: 14px;
+    font-weight: 500;
+    text-decoration: none;
+}
+.links img{
+    height: 25px;
+    margin-right: 20px;
+}
+.links:hover,
+.links.active{
+background: rgba(0,0,0,0.1);
+}
+.separator{
+    border: none;
+    border-bottom: 1px solid rgba(0,0,0,0.1);
+    margin: 20px 0;
+}
+
+/* filters */
+
+.filters{
+    position: fixed;
+    left: 250px;
+    top: 60px;
+    width: calc(100% - 250px);
+    height: 60px;
+    background: #fff;
+    border-top: 1px solid #dbdbdb;
+    border-bottom: 1px solid #dbdbdb;
+    padding: 0 20px;
+    display: flex;
+    align-items: center;
+    overflow-x: auto;
+    
+}
+.filters::-webkit-scrollbar{
+    display: none;
+}
+.filter-options{
+    flex:0 0 auto;
+    padding: 10px 20px;
+    border-radius: 50px;
+    background: #f0f0f0;
+    border:1px solid #dbdbdb;
+    text-transform: capitalize;
+    margin-right: 10px;
+    color: #242424;
+    font-size: 15px;
+    cursor: pointer;
+}
+.filter-options.active{
+    color: #fff;
+    background: #242424;
+}
+
+/* Video-Container */
+
+.video-container{
+    width: calc(100%-250px);
+    margin-top: 120px;
+    margin-left: 250px;
+    padding: 20px;
+    display: grid;
+    grid-template-columns: repeat(4,25%);
+    grid-gap: 20px 5px;
+    overflow-x: hidden;
+}
+.video{
+    min-height: 250px;
+    height: auto;
+    cursor: pointer;
+}
+.thumbnail{
+    width: 100%;
+    height: 150px;
+    object-fit: cover;
+}
+.content{
+    width: 100%;
+    height: 100px;
+    padding: 10px;
+    display: flex;
+    justify-content: space-between;
+    
+}
+.channel-icon{
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-right: 10px;
+}
+.title{
+    width: 100%;
+    height: 40px;
+    overflow: hidden;
+}
+.channel-name{
+    font-size: 14px;
+    margin: 2px 0;
+    color: #979797;
+}
+
+
+.search-result{
+    margin-top: 120px;
+    margin-left: 250px;
+    padding: 20px;
+    position: fixed;
+    z-index: 1000;
+}
+
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="toggle-btn">
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
+        <img src="https://www.gstatic.com/youtube/img/branding/youtubelogo/svg/youtubelogo.svg" class="logo" alt="yt">
+        <div class="search-box">
+            <input type="text" class="search-bar" placeholder="search">
+            <button class="search-btn" onclick="getResults()"><img src="https://imgs.search.brave.com/FIFN9l9-Wwu0ZSaLp2hEryvOi5sHOXQPnjfceIzhvus/rs:fit:512:512:1/g:ce/aHR0cHM6Ly93d3cu/cG5nYWxsLmNvbS93/cC1jb250ZW50L3Vw/bG9hZHMvOC9NYWdu/aWZ5aW5nLUdsYXNz/LVNlYXJjaC1QTkct/VHJhbnNwYXJlbnQt/SEQtUGhvdG8ucG5n"></button>
+        </div>
+        <div class="user-options">
+            <img src="https://imgs.search.brave.com/Nhw6a5GMySiYZPHj2MmMfTYMW_xemskVifywKtQ2jTQ/rs:fit:474:225:1/g:ce/aHR0cHM6Ly90c2Uy/Lm1tLmJpbmcubmV0/L3RoP2lkPU9JUC5D/WG1XQUI1Qkx5OGl3/dEZHcmp4bEd3SGFI/YSZwaWQ9QXBp" class="icon">
+            <img src="https://imgs.search.brave.com/VSw8KKeEjIDWYxiGheLfrOZTmi7G3eJBSImPAQNwJrw/rs:fit:512:512:1/g:ce/aHR0cHM6Ly93d3cu/cG5nYXJ0cy5jb20v/ZmlsZXMvMy9Zb3V0/dWJlLUJlbGwtSWNv/bi1QTkctSW1hZ2Uu/cG5n" class="icon">
+            <img src="https://imgs.search.brave.com/wgyBsTFPjzOhnwx37vCl6qdCTMQeLW8l9hR8aRRMlYY/rs:fit:512:512:1/g:ce/aHR0cHM6Ly9jZG4z/Lmljb25maW5kZXIu/Y29tL2RhdGEvaWNv/bnMvZmF0aWNvbnMv/MzIvZ3JpZC0yLTAx/LTUxMi5wbmc" class="icon">
+        </div>
+        <div class="user-dp">
+            <img src="https://imgs.search.brave.com/zzFangGFNKqGrcShsA8juiUN7J3-7HzWlE6ZsCQhUMk/rs:fit:886:902:1/g:ce/aHR0cHM6Ly9pLnBp/bmltZy5jb20vb3Jp/Z2luYWxzL2E0LzMw/L2MzL2E0MzBjMzgw/NmMyMjM5OTY5Y2Ri/YjE2MTBjYTMxODkz/LnBuZw">
+        </div>
+    </nav>
+
+    <!-- sidebar -->
+    <div class="side-bar">
+        <a href="#" class="links active"><img src="https://imgs.search.brave.com/iY5CQk9DWEk85VIndMtEypSnPcg8Xg4u4K_DcimBLbM/rs:fit:512:512:1/g:ce/aHR0cHM6Ly93d3cu/aWNvbnNkYi5jb20v/aWNvbnMvZG93bmxv/YWQvcmVkL2hvbWUt/Ny01MTIucG5n">Home</a>
+        <a href="#" class="links"><img src="https://imgs.search.brave.com/ZROYD3YNr8-DPNlq4eGcV6lkvpxKmd2dBwY2BHVRnFE/rs:fit:980:980:1/g:ce/aHR0cDovL2Nkbi5v/bmxpbmV3ZWJmb250/cy5jb20vc3ZnL2Rv/d25sb2FkXzM3NTAz/NS5wbmc">Explore</a>
+        <a href="#" class="links"><img src="https://imgs.search.brave.com/gqV93lXa2BL4VN-Gjdiyd5w-u5B_8gYxvUvqRuadb_o/rs:fit:512:512:1/g:ce/aHR0cHM6Ly9jZG4x/Lmljb25maW5kZXIu/Y29tL2RhdGEvaWNv/bnMveW91dHViZS0y/My8zMS9WZWN0b3It/NC01MTIucG5n">Subscription</a>
+        <hr class="sparator">
+        <a href="#" class="links"><img src="https://imgs.search.brave.com/QUeJfPF5aleJEZ5eTMqpWeRF1TYnJmsdGz9PmIhJMAE/rs:fit:458:225:1/g:ce/aHR0cHM6Ly90c2Uy/Lm1tLmJpbmcubmV0/L3RoP2lkPU9JUC5y/RTZQOUhrbVZDRTha/UTVDZWlUMG9RSGFI/cSZwaWQ9QXBp">Library</a>
+        <a href="#" class="links"><img src="https://imgs.search.brave.com/vVkc35Th-xi8PZeOwxLelphat3hgxCPCn_TRw-IauUY/rs:fit:980:980:1/g:ce/aHR0cDovL2Nkbi5v/bmxpbmV3ZWJmb250/cy5jb20vc3ZnL2Rv/d25sb2FkXzI1MTU4/Ni5wbmc">History</a>
+        <a href="#" class="links"><img src="https://imgs.search.brave.com/OtW5ZF2D8vt_SzLq-3g8XU4qmj8i-AOfJTvKfY5EteU/rs:fit:512:512:1/g:ce/aHR0cDovL2ljb25z/Lmljb25hcmNoaXZl/LmNvbS9pY29ucy9h/bGVjaXZlL2ZsYXR3/b2tlbi81MTIvQXBw/cy1QbGF5ZXItVmlk/ZW8taWNvbi5wbmc">Your Video</a>
+        <a href="#" class="links"><img src="https://imgs.search.brave.com/2JNqUYWiMYypaNCEjWkPAiH2a9WOvoVBgJDme3gvoKU/rs:fit:980:980:1/g:ce/aHR0cDovL2Nkbi5v/bmxpbmV3ZWJmb250/cy5jb20vc3ZnL2lt/Z18zNzU2NDQucG5n">Watch Later</a>
+        <a href="#" class="links"><img src="https://imgs.search.brave.com/ke-wlf6ZICw_-u45IW_FBTzFiPVLRYZjF0CnzDbFhaQ/rs:fit:980:958:1/g:ce/aHR0cDovL3BuZ2lt/Zy5jb20vdXBsb2Fk/cy9saWtlL2xpa2Vf/UE5HNjEucG5n">Like video</a>
+        <a href="#" class="links"><img src="https://imgs.search.brave.com/BGRe7IbcvpRf4_AdT0ZfywTvL2u6WS_tM4w2q6EIv6I/rs:fit:256:256:1/g:ce/aHR0cHM6Ly9hdXgu/aWNvbnNwYWxhY2Uu/Y29tL3VwbG9hZHMv/bG93LWltcG9ydGFu/Y2UtaWNvbi0yNTYu/cG5n">Show More</a>
+    </div>
+
+    <!-- filters -->
+    <div class="filters">
+        <button class="filter-options active">all</button>
+        <button class="filter-options">HTML</button>
+        <button class="filter-options">CSS</button>
+        <button class="filter-options">Javacript</button>
+        <button class="filter-options">Java</button>
+        <button class="filter-options">Typescript</button>
+        <button class="filter-options">Web Development</button>
+        <button class="filter-options">C++</button>
+        <button class="filter-options">SQL</button>
+        <button class="filter-options">Python</button>
+        <button class="filter-options">PHP</button>
+        <button class="filter-options">MongoDB</button>
+
+    </div>
+
+    <!-- Video Conainer -->
+    <div class="video-container">
+        <div class="search-result"></div>
+       
+    </div>
+
+</body>
+</html>
+<script>
+
+const videoCardContainer=document.querySelector('.video-container');
+let API_KEY = "AIzaSyARIFT08wQ4J2rdU6dr-r0NtQQHzRFpoaA";
+let video_http="https://www.googleapis.com/youtube/v3/videos?";
+let channel_http="https://www.googleapis.com/youtube/v3/channels?";
+
+fetch(video_http + new URLSearchParams({
+    key:API_KEY,
+    part:'snippet',
+    chart:'mostPopular',
+    maxResults:40,
+    regionCode:'IN',
+
+}))
+.then(res=>res.json())
+.then(data=>{
+   // console.log(data);
+   data.items.forEach(item => {
+        getChannelIcon(item);
+   });
+})
+.catch(err=>console.log(err));
+
+
+
+const getChannelIcon=(video_data)=>{
+    fetch(channel_http + new URLSearchParams({
+        key:API_KEY,
+        part:'snippet',
+        id:video_data.snippet.channelId,
+    }))
+    .then(res=>res.json())
+    .then(data=>{
+        //console.log(data);
+        video_data.channelThumbnail=data.items[0].snippet.thumbnails.default.url;
+        //console.log(video_data)
+        makeVideoCard(video_data);
+    })
+}
+
+
+
+
+const makeVideoCard=(data)=>{
+
+    videoCardContainer.innerHTML += `
+    <div class="video" onclick="location.href='https://youtube.com/watch?v=${data.id}'">
+      <img src="${data.snippet.thumbnails.high.url}" class="thumbnail"/>
+        <div class="content">
+            <img src="${data.channelThumbnail}" class="channel-icon"/>
+                <div class="info">
+                    <h4 class="title">${data.snippet.title}</h4>
+                    <p class="channel-name">${data.snippet.channelTitle}</p>
+                </div>
+        </div>
+    </div>
+`;
+}
+
+
+
+// serch result
+
+async function getResults(){
+    try{ 
+        let searchText=document.querySelector(".search-bar").value;
+        let url=`https://youtube.googleapis.com/youtube/v3/search?maxResults=20&q=${searchText}&key=${API_KEY}`
+        let res = await fetch(url);
+        let data= await res.json();
+        console.log(data.items);
+        displayData(data.items);
+    }
+    catch(err){
+        console.log(err);
+    }
+}
+
+const displayData = (videoList)=>{
+    
+    container.innerHTML="";
+    videoList.forEach(video => {
+        let videoCard=document.createElement("div");
+        let videoFrame=document.createElement("iframe");
+        videoFrame.src=`https://www.youtube.com/embed/${video.id.videoId}`;
+        videoCard.append(videoFrame);
+        container.append(videoCard);
+    });
+
+    
+}
+
+</script>
